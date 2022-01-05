@@ -6,7 +6,27 @@ import metrics from "../../constants/metrics";
 
 const MainBoardComponent = () => {
   const [currentColorArray, setCurrentColorArray] = useState([]);
-  const width = 6;
+  const width = 8;
+
+  const checkForColumnOfThree = () => {
+    for (let i = 0; i < 47; i++) {
+      const columnOfThree = [i, i + width, i + width * 2];
+      if (
+        columnOfThree.every(
+          (index) => currentColorArray[index] === currentColorArray[i]
+        )
+      ) {
+        columnOfThree.forEach((index) => {
+          currentColorArray[index] = "";
+        });
+        // console.log("columnOfThree", currentColorArray[i]);
+        return true;
+      } else {
+        console.log("columnOfThree", columnOfThree);
+        return false;
+      }
+    }
+  };
 
   const createBoard = () => {
     const randomColorArray = [];
@@ -22,8 +42,12 @@ const MainBoardComponent = () => {
     createBoard();
   }, []);
 
+  useEffect(() => {
+    checkForColumnOfThree();
+  }, [currentColorArray]);
+
   return (
-    <View style={{ flex: 1, padding: 20 }}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           width: metrics.screenWidth,
@@ -38,8 +62,8 @@ const MainBoardComponent = () => {
             key={index}
             style={{
               backgroundColor: color,
-              width: metrics.screenWidth / 6,
-              height: metrics.screenHeight / 6,
+              width: metrics.screenWidth / 8,
+              height: metrics.screenHeight / 8,
             }}
           ></View>
         ))}
