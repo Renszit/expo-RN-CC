@@ -11,19 +11,21 @@ const MainBoardComponent = () => {
   const checkForColumnOfThree = () => {
     for (let i = 0; i < 47; i++) {
       const columnOfThree = [i, i + width, i + width * 2];
+      const decidedColor = currentColorArray[i];
       if (
         columnOfThree.every(
-          (index) => currentColorArray[index] === currentColorArray[i]
+          (number) => currentColorArray[number] == decidedColor
         )
       ) {
-        columnOfThree.forEach((index) => {
-          currentColorArray[index] = "";
-        });
+        console.log("column of three", columnOfThree);
+        // columnOfThree.forEach((index) => {
+        //   setCurrentColorArray((currentColorArray) => {
+        //     const newColorArray = [...currentColorArray];
+        //     newColorArray[index] = "";
+        //     return newColorArray;
+        //   });
+        // });
         // console.log("columnOfThree", currentColorArray[i]);
-        return true;
-      } else {
-        console.log("columnOfThree", columnOfThree);
-        return false;
       }
     }
   };
@@ -43,8 +45,14 @@ const MainBoardComponent = () => {
   }, []);
 
   useEffect(() => {
-    checkForColumnOfThree();
-  }, [currentColorArray]);
+    const timer = setInterval(() => {
+      checkForColumnOfThree();
+      setCurrentColorArray([...currentColorArray]);
+    }, 100);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [checkForColumnOfThree, currentColorArray]);
 
   return (
     <View style={{ flex: 1 }}>
