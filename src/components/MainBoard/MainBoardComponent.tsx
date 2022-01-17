@@ -12,20 +12,74 @@ const MainBoardComponent = () => {
     for (let i = 0; i < 47; i++) {
       const columnOfThree = [i, i + width, i + width * 2];
       const decidedColor = currentColorArray[i];
+
       if (
         columnOfThree.every(
-          (number) => currentColorArray[number] == decidedColor
+          (number) => currentColorArray[number] === decidedColor
         )
       ) {
-        console.log("column of three", columnOfThree);
-        // columnOfThree.forEach((index) => {
-        //   setCurrentColorArray((currentColorArray) => {
-        //     const newColorArray = [...currentColorArray];
-        //     newColorArray[index] = "";
-        //     return newColorArray;
-        //   });
-        // });
-        // console.log("columnOfThree", currentColorArray[i]);
+        columnOfThree.forEach((square) => (currentColorArray[square] = ""));
+      }
+    }
+  };
+
+  const checkForColumnOfFour = () => {
+    for (let i = 0; i < 47 - 1; i++) {
+      const columnOfFour = [i, i + width, i + width * 2, i + width * 3];
+      const decidedColor = currentColorArray[i];
+
+      if (
+        columnOfFour.every(
+          (number) => currentColorArray[number] === decidedColor
+        )
+      ) {
+        columnOfFour.forEach((square) => (currentColorArray[square] = ""));
+      }
+    }
+  };
+
+  const checkForRowOfThree = () => {
+    for (let i = 0; i < 64; i++) {
+      const rowOfThree = [i, i + 1, i + 2];
+      const decidedColor = currentColorArray[i];
+      const notValid = [
+        6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64,
+      ];
+
+      if (notValid.includes(i)) continue;
+
+      if (
+        rowOfThree.every((number) => currentColorArray[number] === decidedColor)
+      ) {
+        rowOfThree.forEach((square) => (currentColorArray[square] = ""));
+      }
+    }
+  };
+
+  const checkForRowOfFour = () => {
+    for (let i = 0; i < 64; i++) {
+      const rowOfFour = [i, i + 1, i + 2, i + 3];
+      const decidedColor = currentColorArray[i];
+      const notValid = [
+        5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53,
+        54, 55, 60, 63, 64,
+      ];
+
+      if (notValid.includes(i)) continue;
+
+      if (
+        rowOfFour.every((number) => currentColorArray[number] === decidedColor)
+      ) {
+        rowOfFour.forEach((square) => (currentColorArray[square] = ""));
+      }
+    }
+  };
+
+  const moveDown = () => {
+    for (let i = 0; i < 64 - width; i++) {
+      if (currentColorArray[i + width] === "") {
+        currentColorArray[i + width] = currentColorArray[i];
+        currentColorArray[i] = " ";
       }
     }
   };
@@ -37,6 +91,7 @@ const MainBoardComponent = () => {
         candyColors[Math.floor(Math.random() * candyColors.length)];
       randomColorArray.push(randomColor);
     }
+
     setCurrentColorArray(randomColorArray);
   };
 
@@ -46,13 +101,25 @@ const MainBoardComponent = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
+      checkForColumnOfFour();
       checkForColumnOfThree();
+      checkForRowOfFour();
+      checkForRowOfThree();
+      moveDown();
       setCurrentColorArray([...currentColorArray]);
     }, 100);
+
     return () => {
       clearInterval(timer);
     };
-  }, [checkForColumnOfThree, currentColorArray]);
+  }, [
+    checkForRowOfThree,
+    checkForRowOfFour,
+    checkForColumnOfFour,
+    checkForColumnOfThree,
+    currentColorArray,
+    moveDown,
+  ]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -63,11 +130,12 @@ const MainBoardComponent = () => {
           alignItems: "center",
           justifyContent: "center",
           flexWrap: "wrap",
+          flexDirection: "row",
         }}
       >
         {currentColorArray.map((color, index) => (
           <View
-            key={index}
+            key={index + color}
             style={{
               backgroundColor: color,
               width: metrics.screenWidth / 8,
