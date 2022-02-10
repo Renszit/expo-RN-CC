@@ -76,10 +76,19 @@ const MainBoardComponent = () => {
   };
 
   const moveDown = () => {
+    const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
+
     for (let i = 0; i < 64 - width; i++) {
+      const isFirstRow = firstRow.includes(i);
+
+      if (isFirstRow && currentColorArray[i] === "") {
+        let randomNumber = Math.floor(Math.random() * candyColors.length);
+        currentColorArray[i] = candyColors[randomNumber];
+      }
+
       if (currentColorArray[i + width] === "") {
         currentColorArray[i + width] = currentColorArray[i];
-        currentColorArray[i] = " ";
+        currentColorArray[i] = "";
       }
     }
   };
@@ -135,7 +144,7 @@ const MainBoardComponent = () => {
       >
         {currentColorArray.map((color, index) => (
           <View
-            key={index + color}
+            key={index + color + Math.random()}
             style={{
               backgroundColor: color,
               width: metrics.screenWidth / 8,
