@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Animated } from "react-native";
 
 import candyColors from "../../constants/colors";
 import metrics from "../../constants/metrics";
+import { Draggable } from "../Draggable/Draggable";
 
 const MainBoardComponent = () => {
   const [currentColorArray, setCurrentColorArray] = useState([]);
@@ -143,14 +144,7 @@ const MainBoardComponent = () => {
         }}
       >
         {currentColorArray.map((color, index) => (
-          <View
-            key={index + color + Math.random()}
-            style={{
-              backgroundColor: color,
-              width: metrics.screenWidth / 8,
-              height: metrics.screenHeight / 8,
-            }}
-          ></View>
+          <Draggable key={index + color + Math.random()} color={color} />
         ))}
       </View>
     </View>
