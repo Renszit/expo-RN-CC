@@ -7,30 +7,33 @@ import Animated, {
   useAnimatedStyle,
   Easing,
   useAnimatedGestureHandler,
+  withSpring,
 } from "react-native-reanimated";
-
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from "react-native-gesture-handler";
+
 export type DraggableProps = {
   color: string;
+  dataId: number;
 };
 
-type ContextInterface = {
+export type ContextInterface = {
   translateX: number;
   translateY: number;
 };
 
-export const Draggable = ({ color }: DraggableProps) => {
+export const Draggable = ({ color, dataId }: DraggableProps) => {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-
+  
   const panGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
     ContextInterface
   >({
     onStart: (evt, context) => {
+      console.log(dataId);
       context.translateX = translateX.value;
       context.translateY = translateY.value;
     },
@@ -38,7 +41,10 @@ export const Draggable = ({ color }: DraggableProps) => {
       translateX.value = evt.translationX + context.translateX;
       translateY.value = evt.translationY + context.translateY;
     },
-    onEnd: (evt) => {},
+    onEnd: () => {
+      translateX.value = withSpring(0);
+      translateY.value = withSpring(0);
+    },
   });
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -64,7 +70,7 @@ export const Draggable = ({ color }: DraggableProps) => {
               backgroundColor: color,
               width: metrics.screenWidth / 8,
               height: metrics.screenHeight / 8,
-              borderRadius: 50,
+              borderRadius: 1,
             },
           ]}
         />
