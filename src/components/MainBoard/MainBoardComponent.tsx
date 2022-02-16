@@ -144,7 +144,7 @@ const MainBoardComponent = () => {
         }}
       >
         {currentColorArray.map((color, index) => (
-          <Draggable key={index + color + Math.random()} color={color} />
+          <Draggable key={index + color} color={color} />
         ))}
       </View>
     </View>
