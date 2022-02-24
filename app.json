@@ -10,6 +10,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-community-flipper"
+        
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -17,13 +23,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.renspennings.CCproject"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.renspennings.CCproject"
     },
     "web": {
       "favicon": "./assets/favicon.png"

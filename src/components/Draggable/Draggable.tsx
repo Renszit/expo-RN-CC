@@ -27,13 +27,15 @@ export type ContextInterface = {
 export const Draggable = ({ color, dataId }: DraggableProps) => {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-  
+
   const panGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
     ContextInterface
   >({
     onStart: (evt, context) => {
-      console.log(dataId);
+      // console.log(dataId);
+
+      console.log("evt", evt);
       context.translateX = translateX.value;
       context.translateY = translateY.value;
     },
@@ -41,7 +43,7 @@ export const Draggable = ({ color, dataId }: DraggableProps) => {
       translateX.value = evt.translationX + context.translateX;
       translateY.value = evt.translationY + context.translateY;
     },
-    onEnd: () => {
+    onEnd: (evt, context) => {
       translateX.value = withSpring(0);
       translateY.value = withSpring(0);
     },
